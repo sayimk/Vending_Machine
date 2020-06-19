@@ -1,0 +1,2 @@
+F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Debug\Vending_Machine.exe
+F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Debug\Vending_Machine.pdb
