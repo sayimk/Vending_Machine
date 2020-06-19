@@ -1,7 +1,7 @@
 ﻿  Vending_Machine.cpp
-F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Vending_Machine.cpp(87,23): warning C4018: '<': signed/unsigned mismatch
-F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Vending_Machine.cpp(108,23): warning C4018: '<': signed/unsigned mismatch
-F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Vending_Machine.cpp(162,23): warning C4018: '<': signed/unsigned mismatch
-F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Vending_Machine.cpp(168,22): warning C4018: '>=': signed/unsigned mismatch
-F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Vending_Machine.cpp(183,23): warning C4018: '<': signed/unsigned mismatch
+F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Vending_Machine.cpp(91,23): warning C4018: '<': signed/unsigned mismatch
+F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Vending_Machine.cpp(115,23): warning C4018: '<': signed/unsigned mismatch
+F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Vending_Machine.cpp(173,23): warning C4018: '<': signed/unsigned mismatch
+F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Vending_Machine.cpp(179,22): warning C4018: '>=': signed/unsigned mismatch
+F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Vending_Machine.cpp(195,23): warning C4018: '<': signed/unsigned mismatch
   Vending_Machine.vcxproj -> F:\WorkSpace\GitHub Repos\Vending_Machine\Vending_Machine\Debug\Vending_Machine.exe

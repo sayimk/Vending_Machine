@@ -4,13 +4,12 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <iomanip>
 using namespace std;
 
 
 //represents an item from the vending machine
 class VItem {
-
-
 public:
 
     VItem() {
@@ -21,12 +20,14 @@ public:
 
     }
 
+    //constructor
     VItem(string item_name, float item_price, int item_amount) {
         itemName = item_name;
         itemAmount = item_amount;
         itemPrice = item_price;
     }
 
+    //methods
     string getName() {
         return itemName;
     }
@@ -63,24 +64,27 @@ vector<VItem> add_Item(vector<VItem> current_inventory, string item_name, int to
     return current_inventory;
 }
 
+//adding money via float method
 float add_inserted_money(float current_total, float inserted_to_add) {
 
     current_total = current_total + inserted_to_add;
     cout << "Accepted: " + to_string(inserted_to_add)+"\n";
-    cout << "Balance:  " + to_string(current_total)+"\n";
+    cout << "Balance:  "; cout << setprecision(3) << current_total; cout << "\n";
     return current_total;
 }
 
+//adding money via string method
 float add_inserted_money(float current_total, string inserted_to_add) {
     
     //add exception handling here
     current_total = current_total + stof(inserted_to_add);
     cout << "Accepted: " + inserted_to_add + "\n";
-    cout << "Balance:  " + to_string(current_total) + "\n";
+    cout << "Balance:  "; cout << setprecision(3) << current_total; cout << "\n";
     return current_total;
 }
 
-void coins_out(vector<string> coins_in) {
+//returns all the input coins
+void coins_out(vector<string> coins_in, float total) {
 
     string temp_out = "";
     
@@ -94,9 +98,12 @@ void coins_out(vector<string> coins_in) {
         }
     }
 
-    cout << "Returning coins: " + temp_out;
+    cout << "\nReturning coins: " + temp_out+"\n";
+    cout << setprecision(3) << total;
+    cout << "\n";
 }
 
+//displays balance, options, available items list
 void display_menu(vector<VItem> current_inventory, float balance_total) {
 
     cout << "\n";
@@ -106,10 +113,11 @@ void display_menu(vector<VItem> current_inventory, float balance_total) {
     cout << "Item Name - Quantity - Price\n";
 
     for (int i = 0; i < current_inventory.size(); i++) {
-        cout <<to_string(i)+" - "+ current_inventory.at(i).getName() + " - " + to_string(current_inventory.at(i).getAmount()) + " - " + to_string(current_inventory.at(i).getPrice()) + "\n";
+        cout << to_string(i) + " - " + current_inventory.at(i).getName() + " - " + to_string(current_inventory.at(i).getAmount()) + " - "; cout << setprecision(3) << current_inventory.at(i).getPrice();
+        cout << "\n";
     }
 
-    cout << "\nYour Balance is: " + to_string(balance_total)+"\n";
+    cout << "\nYour Balance is: "; cout << setprecision(3) << (balance_total); cout << "\n";
     cout << "Options available are: \n";
     cout << "- Insert Money (POUND, TWO POUNDS, 1, 2, 5, 10, 20, 50)\n";
     cout << "- COIN RETURN \n";
@@ -118,6 +126,7 @@ void display_menu(vector<VItem> current_inventory, float balance_total) {
     cout << "- exit \n";
 }
 
+//recursive password barrier, requires number of attempts and correct password
 bool password_barrier(string password, int attempts) {
     bool granted = false;
     string enteredPass;
@@ -145,6 +154,7 @@ bool password_barrier(string password, int attempts) {
     }
 }
 
+//displays service menu options
 void display_service_menu() {
 
     cout << "\n Service Menu:\n";
@@ -154,6 +164,7 @@ void display_service_menu() {
 
 }
 
+//basic string splitter/parser, uses ',' as a regex for splitting as well as string end i.e. hi,hello, howdy >> vector(3)
 vector<string> input_parser(string input_regex_comma) {
     
     string buffer = "";
@@ -178,6 +189,7 @@ vector<string> input_parser(string input_regex_comma) {
     return outputs;
 }
 
+//basic bubble style search, I know its not efficient for really large lists, but it works
 int vector_vitem_search(vector<VItem> item_list,string name) {
 
     for (int i = 0; i < item_list.size(); i++){
@@ -196,22 +208,27 @@ void self_function_test() {
 
 int main(){
 
+    //vars
     vector<VItem> items_list;
     float total_inserted = 0.0f;
+    float last_total_logged = 0.0f;
     vector<string> inserted_order;
     string input = "";
     bool exit = false;
     string pass = "1234abc";
 
+    //using while to keep prog running, use 'exit' to exit
     while (!exit){
 
         display_menu(items_list,total_inserted);
 
         cout << "\nEnter Option: ";
 
+        //easiest way to get a sentense input i.e. buy 1, but it is slightly buggy, registers 'Enter' as an input and goes through one display 
+        //menu cycle. if more time, could find a solution
         getline(cin, input);
 
-        //check for BUY
+        //check for 'buy' keyword
         int selection = -1;;
 
         if (input.find("Buy") < input.size()) {
@@ -258,25 +275,39 @@ int main(){
                 cout << "\n";
             }
 
-
+            //least efficient, but easiest option for de-case-sensitivety, if had time, could standardize string to all lowercase
         }else if ((input=="POUND")||(input=="pound")||(input=="Pound")){
             
             total_inserted = add_inserted_money(total_inserted, 1.0f);
             inserted_order.push_back(input);
+            last_total_logged = total_inserted;
 
         } else if ((input == "TWO POUNDS") || (input == "two pounds") || (input == "Two Pounds")) {
             
             total_inserted = add_inserted_money(total_inserted, 2.0f);
             inserted_order.push_back(input);
+            last_total_logged = total_inserted;
 
         } else if ((input == to_string(1)) || (input == to_string(2)) || (input == to_string(5)) || (input == to_string(10)) || (input == to_string(20)) || (input == to_string(50))) {
 
             total_inserted = add_inserted_money(total_inserted, input);
             inserted_order.push_back(input);
+            last_total_logged = total_inserted;
 
         } else if ((input == "COIN RETURN") || (input == "Coin Return") || (input == "coin return")) {
-            //lock the coins in after a transaction, by checking logged_total and total inserted-----
-            coins_out(inserted_order);
+            
+            try{
+
+                if (last_total_logged != total_inserted)
+                    throw exception("balance not same as inserted coins, balance has changed");
+
+                coins_out(inserted_order, total_inserted);
+
+            }catch (exception e){
+                cout << "Coins cannot be returned after using 'Buy' selection\n";
+                cout << "Change can be returned in a future update, please come again!";
+            }
+            
        
         }else if ((input == "SERVICE") || (input == "Service") || (input == "service")) {
 
@@ -287,6 +318,7 @@ int main(){
 
             auth = password_barrier(pass, 3);
 
+            //only entering service while user hasnt entered exit command and is authorized via password_barrier, defaulted to 3 attempts
             while (!exit_service && auth) {
                 string selection = "";
                 vector<string> add_vals;
@@ -350,6 +382,7 @@ int main(){
                         if (items_list.at(index_to_remove).getAmount() < stoi(remove_vals.at(1)))
                             throw out_of_range("unable to remove more items than available in item vector");
 
+                        //if all exception checks are passed deduct the amount from the items list
                                 items_list.at(index_to_remove).setAmount(items_list.at(index_to_remove).getAmount() - stoi(remove_vals.at(1)));
                                 cout << "Items Removed";
 
@@ -371,6 +404,9 @@ int main(){
         
         } else if (input =="exit"){
             exit = true;
+        }
+        else {
+            cout << "invalid input, try another option";
         }
 
     }
