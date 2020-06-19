@@ -59,8 +59,11 @@ private:
 
 };
 
-vector<VItem> add_Item(vector<VItem> current_inventory, string item_name, int total_amount, float price) {
+vector<VItem> add_Item(vector<VItem> current_inventory, string item_name, float price, int total_amount) {
     
+    VItem temp(item_name,price,total_amount);
+    current_inventory.push_back(temp);
+
     return current_inventory;
 }
 
@@ -68,7 +71,6 @@ vector<VItem> add_Item(vector<VItem> current_inventory, string item_name, int to
 float add_inserted_money(float current_total, float inserted_to_add) {
 
     current_total = current_total + inserted_to_add;
-    cout << "Accepted: " + to_string(inserted_to_add)+"\n";
     cout << "Balance:  "; cout << setprecision(3) << current_total; cout << "\n";
     return current_total;
 }
@@ -78,7 +80,6 @@ float add_inserted_money(float current_total, string inserted_to_add) {
     
     //add exception handling here
     current_total = current_total + stof(inserted_to_add);
-    cout << "Accepted: " + inserted_to_add + "\n";
     cout << "Balance:  "; cout << setprecision(3) << current_total; cout << "\n";
     return current_total;
 }
@@ -185,7 +186,6 @@ vector<string> input_parser(string input_regex_comma) {
                 buffer = buffer + input_regex_comma.at(i);
         }
     }
-
     return outputs;
 }
 
@@ -203,7 +203,46 @@ int vector_vitem_search(vector<VItem> item_list,string name) {
 
 //use to verify functions work
 void self_function_test() {
+    cout << "-- Self-check --\nlog:\n";
 
+    if (add_inserted_money(4.0f,2.5f)==6.5f)
+        cout << " - Adding money via float - Test Successful\n";
+    else 
+        cout << " - Adding money via float - Test Failed\n";
+
+    if (add_inserted_money(4.0f, "2.5") == 6.5f)
+        cout << " - Adding money via text - Test Successful\n";
+    else
+        cout << " - Adding money via text - Test Failed\n";
+
+    if (input_parser("test1,test2,test3").size() == 3)
+        cout << " - Input text parser - Test Successful\n";
+    else
+        cout << " - Input text parser - Test Failed\n";
+
+    VItem test1("test1", 1.0, 1);
+    VItem test2("test2", 2.0, 2);
+    VItem test3("test3", 3.0, 3);
+
+    vector<VItem> items;
+    items.push_back(test1);
+    items.push_back(test2);
+    items.push_back(test3);
+
+    cout << items.size();
+    vector<VItem> temp = add_Item(items, "test4", 4, 4.0f);
+    if (temp.size() == 4)
+        cout << " - Service Add Item - Test Successful\n";
+    else
+        cout << " - Service Add Item - Test Failed\n";
+
+    int i = vector_vitem_search(items, "test3");
+    if (items.at(i).getName() == "test3")
+        cout << " - Vector Items Search - Test Successful\n";
+    else
+        cout << " - Vector Items Search - Test Failed\n";
+
+    cout << "-- Self-Check Completed --\n";
 }
 
 int main(){
@@ -216,6 +255,9 @@ int main(){
     string input = "";
     bool exit = false;
     string pass = "1234abc";
+
+    //checks if most of the core functions are working through basic automated test
+    self_function_test();
 
     //using while to keep prog running, use 'exit' to exit
     while (!exit){
@@ -243,9 +285,7 @@ int main(){
 
        //start of option selection clause
         if (selection != -1){
-            
             try {
-
                 selection = stoi(input.substr(selection + 3, input.size()));
 
                 if (items_list.at(selection).getPrice() <= total_inserted) {
@@ -258,7 +298,6 @@ int main(){
                         items_list.at(selection).setAmount(items_list.at(selection).getAmount() - 1);
 
                         cout << "\nComplete, please take item\n";
-
                     }
                     else
                         cout << "\nInsufficient items available, please select an alternative\n";
@@ -297,7 +336,6 @@ int main(){
         } else if ((input == "COIN RETURN") || (input == "Coin Return") || (input == "coin return")) {
             
             try{
-
                 if (last_total_logged != total_inserted)
                     throw exception("balance not same as inserted coins, balance has changed");
 
@@ -307,7 +345,6 @@ int main(){
                 cout << "Coins cannot be returned after using 'Buy' selection\n";
                 cout << "Change can be returned in a future update, please come again!";
             }
-            
        
         }else if ((input == "SERVICE") || (input == "Service") || (input == "service")) {
 
@@ -335,7 +372,6 @@ int main(){
                     cin >> item_to_add;
 
                     try {
-
                         add_vals = input_parser(item_to_add);
                         exists = vector_vitem_search(items_list, add_vals.at(0));
 
@@ -343,9 +379,8 @@ int main(){
                             
                             if (add_vals.size() < 3)
                                 throw invalid_argument("VItem requires 3 data cells, not all data cells available, add_vals < 3");
-
-                            VItem new_item(add_vals.at(0), stof(add_vals.at(1)), stoi(add_vals.at(2)));
-                            items_list.push_back(new_item);
+                            
+                            items_list = add_Item(items_list, add_vals.at(0), stof(add_vals.at(1)), stoi(add_vals.at(2)));
                             cout << "\nItem Added\n";
 
                         }
@@ -370,7 +405,6 @@ int main(){
                     int index_to_remove = -1;
 
                     try {
-
                         cout << "\n Enter the item name, followed by quantity: \n";
                         cin >> item_to_remove;
                         remove_vals = input_parser(item_to_remove);
@@ -382,7 +416,7 @@ int main(){
                         if (items_list.at(index_to_remove).getAmount() < stoi(remove_vals.at(1)))
                             throw out_of_range("unable to remove more items than available in item vector");
 
-                        //if all exception checks are passed deduct the amount from the items list
+                               //if all exception checks are passed deduct the amount from the items list
                                 items_list.at(index_to_remove).setAmount(items_list.at(index_to_remove).getAmount() - stoi(remove_vals.at(1)));
                                 cout << "Items Removed";
 
@@ -393,13 +427,11 @@ int main(){
                     }catch (exception e) {
                         cout << "Whoops something went wrong, please verify input and try again";
                     }
-                
                 }
                 else if (selection == "3") {
                     exit_service = true;
                 }
             }
-
             cout << "\nExiting Service Menu\n";
         
         } else if (input =="exit"){
@@ -408,11 +440,7 @@ int main(){
         else {
             cout << "invalid input, try another option";
         }
-
     }
-
-
-    
 }
 
 
